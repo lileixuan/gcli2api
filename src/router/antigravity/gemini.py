@@ -52,6 +52,27 @@ from src.task_manager import create_managed_task
 
 router = APIRouter()
 
+# ==================== 模型名称处理 ====================
+
+def model_mapping(model_name: str) -> str:
+    """
+    模型名映射到 Antigravity 实际模型名
+    
+    Args:
+        model_name: 原始模型名称
+        
+    Returns:
+        映射后的模型名称
+        
+    参考映射:
+        - gemini-3-pro-preview -> gemini-3-pro-high
+    """
+    mapping = {
+        "gemini-3-pro-preview": "gemini-3-pro-high",
+    }
+    model = mapping.get(model_name, model_name)
+    log.debug(f"[ANTIGRAVITY] 映射模型: {model_name} -> {model}")
+    return model
 
 # ==================== API 路由 ====================
 
@@ -81,6 +102,7 @@ async def generate_content(
         return JSONResponse(content=response)
 
     # 处理模型名称和功能检测
+    model = model_mapping(model)
     use_anti_truncation = is_anti_truncation_model(model)
     real_model = get_base_model_from_feature_model(model)
 
@@ -142,6 +164,7 @@ async def stream_generate_content(
     normalized_dict = model_to_dict(gemini_request)
 
     # 处理模型名称和功能检测
+    model = model_mapping(model)
     use_fake_streaming = is_fake_streaming_model(model)
     use_anti_truncation = is_anti_truncation_model(model)
     real_model = get_base_model_from_feature_model(model)
