@@ -68,7 +68,7 @@ def model_mapping(model_name: str) -> str:
         - gemini-3-pro-preview -> gemini-3-pro-high
     """
     mapping = {
-        "gemini-3-pro-preview": "gemini-3-pro-high",
+        "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
     }
     model = mapping.get(model_name, model_name)
     log.debug(f"[ANTIGRAVITY] 映射模型: {model_name} -> {model}")
